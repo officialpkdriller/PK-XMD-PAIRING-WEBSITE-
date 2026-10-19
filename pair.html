@@ -2,29 +2,42 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Nova-Xmd | LINK DEVICE</title>
-  <meta name="description" content="Secure WhatsApp pairing powered by officialpkdriller">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Nova-XMD | LINK DEVICE</title>
+  <meta name="description" content="Secure WhatsApp pairing powered by officialpkdriller" />
+  <meta name="theme-color" content="#00f0ff" />
 
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Exo+2:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Exo+2:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 
   <style>
+    /* ============================================================
+       THEME
+       ============================================================ */
     :root {
       --cyber-cyan: #00f0ff;
       --cyber-blue: #0066ff;
+      --cyber-purple: #a855f7;
+      --cyber-pink: #ff2bd6;
+      --success: #00ffa3;
+      --error: #ff3860;
+      --warn: #ffb020;
       --dark-bg: #030712;
       --card-bg: rgba(6, 11, 25, 0.75);
       --border-color: rgba(0, 240, 255, 0.25);
       --input-bg: #040914;
       --text-main: #e2e8f0;
+      --text-muted: #94a3b8;
+      --glow: rgba(0, 240, 255, 0.4);
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    html { scroll-behavior: smooth; }
 
     body {
       background-color: var(--dark-bg);
-      background-image: 
+      background-image:
         linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
       background-size: 40px 40px;
@@ -36,9 +49,29 @@
       justify-content: center;
       align-items: center;
       padding: 20px;
+      overflow-x: hidden;
+      position: relative;
     }
 
+    /* ============ ANIMATED BACKGROUND ORBS ============ */
+    .bg-orbs { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+    .orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(90px); opacity: 0.35;
+      animation: float 18s ease-in-out infinite;
+    }
+    .orb.a { width: 380px; height: 380px; background: var(--cyber-cyan); top: -140px; left: -120px; }
+    .orb.b { width: 420px; height: 420px; background: var(--cyber-purple); bottom: -160px; right: -140px; animation-delay: -7s; }
+    .orb.c { width: 300px; height: 300px; background: var(--cyber-pink); top: 50%; left: 55%; animation-delay: -12s; }
+    @keyframes float {
+      0%,100% { transform: translate(0,0) scale(1); }
+      50%     { transform: translate(30px,-40px) scale(1.15); }
+    }
+
+    /* ============ CONTAINER ============ */
     .container {
+      position: relative;
+      z-index: 1;
       width: 100%;
       max-width: 460px;
       padding: 40px 30px;
@@ -47,13 +80,36 @@
       -webkit-backdrop-filter: blur(20px);
       border-radius: 40px;
       border: 1px solid var(--border-color);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(0, 240, 255, 0.05);
+      box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.6),
+        inset 0 0 20px rgba(0, 240, 255, 0.05),
+        0 0 60px rgba(0, 240, 255, 0.08);
       text-align: center;
+      animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+      overflow: hidden;
+    }
+    /* Animated top border */
+    .container::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cyber-cyan), var(--cyber-purple), var(--cyber-pink), transparent);
+      background-size: 200% 100%;
+      animation: borderSlide 4s linear infinite;
+    }
+    @keyframes borderSlide {
+      0%   { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(26px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
+    /* ============ ICON ============ */
     .icon-container {
-      width: 85px;
-      height: 85px;
+      position: relative;
+      width: 90px;
+      height: 90px;
       margin: 0 auto 20px;
       background: #021224;
       border: 2px solid var(--cyber-cyan);
@@ -61,25 +117,37 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+      box-shadow: 0 0 24px rgba(0, 240, 255, 0.4);
       overflow: hidden;
     }
-
-    .icon-container img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+    .icon-container::after {
+      content: '';
+      position: absolute; inset: -2px;
+      border-radius: 26px;
+      padding: 2px;
+      background: linear-gradient(135deg, var(--cyber-cyan), var(--cyber-purple), var(--cyber-pink));
+      background-size: 200% 200%;
+      animation: borderSlide 3s linear infinite;
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
     }
+    .icon-container img { width: 100%; height: 100%; object-fit: cover; }
 
+    /* ============ TITLE ============ */
     .title {
       font-family: 'Orbitron', sans-serif;
       font-size: 28px;
-      font-weight: 700;
+      font-weight: 900;
       letter-spacing: 2px;
-      color: #ffffff;
+      background: linear-gradient(135deg, #fff 20%, var(--cyber-cyan) 50%, var(--cyber-purple) 90%);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent;
       margin-bottom: 12px;
     }
 
+    /* ============ BADGE ============ */
     .protocol-badge {
       display: inline-flex;
       align-items: center;
@@ -94,23 +162,26 @@
       color: var(--cyber-cyan);
       text-transform: uppercase;
       margin-bottom: 20px;
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
     }
 
+    /* ============ DESCRIPTION ============ */
     .description {
       font-size: 13px;
-      color: #94a3b8;
+      color: var(--text-muted);
       line-height: 1.6;
       margin-bottom: 30px;
       max-width: 90%;
       margin-left: auto;
       margin-right: auto;
     }
+    .description i.fa-spin { color: var(--cyber-cyan); }
 
+    /* ============ FORM ============ */
     .form-group {
       text-align: left;
       margin-bottom: 20px;
     }
-
     .input-label {
       display: block;
       margin-bottom: 10px;
@@ -119,10 +190,7 @@
       font-weight: 600;
       letter-spacing: 1px;
     }
-
-    .input-label i {
-      margin-right: 6px;
-    }
+    .input-label i { margin-right: 6px; }
 
     .input-field {
       width: 100%;
@@ -136,17 +204,14 @@
       letter-spacing: 1px;
       transition: all 0.3s ease;
     }
-
     .input-field:focus {
       outline: none;
       border-color: var(--cyber-cyan);
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
+      box-shadow: 0 0 18px rgba(0, 240, 255, 0.25);
     }
+    .input-field::placeholder { color: rgba(0, 240, 255, 0.25); }
 
-    .input-field::placeholder {
-      color: rgba(0, 240, 255, 0.25);
-    }
-
+    /* ============ BUTTONS ============ */
     .action-btn {
       width: 100%;
       padding: 15px;
@@ -169,18 +234,73 @@
       background: transparent;
       border: 1px solid var(--cyber-cyan);
       color: var(--cyber-cyan);
+      position: relative;
+      overflow: hidden;
     }
-
-    .generate-btn:hover {
+    .generate-btn:hover:not(:disabled) {
       background: rgba(0, 240, 255, 0.1);
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+      transform: translateY(-1px);
     }
+    .generate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .generate-btn .btn-shimmer {
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(0, 240, 255, 0.15) 50%, transparent 100%);
+      transform: translateX(-100%);
+    }
+    .generate-btn:hover .btn-shimmer { animation: shimmer 1.2s ease forwards; }
+    @keyframes shimmer { to { transform: translateX(100%); } }
 
+    .copy-btn {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-muted);
+      display: none;
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    .copy-btn.show { display: flex; animation: fadeInUp 0.4s ease forwards; }
+    @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+    .copy-btn:hover { border-color: #ffffff; color: #ffffff; }
+    .copy-btn.copied { border-color: var(--success); color: var(--success); }
+
+    /* ============ SECONDARY ROW ============ */
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .btn-secondary {
+      flex: 1;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(0, 240, 255, 0.15);
+      border-radius: 14px;
+      color: var(--text-muted);
+      font-family: 'Exo 2', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .btn-secondary:hover {
+      border-color: var(--cyber-cyan);
+      color: var(--cyber-cyan);
+      background: rgba(0, 240, 255, 0.06);
+      transform: translateY(-2px);
+    }
+    .btn-secondary i { color: var(--cyber-cyan); }
+
+    /* ============ CODE DISPLAY ============ */
     .code-display {
       width: 100%;
       padding: 18px;
       background: #020612;
-      border: 1px solid rgba(255,255,255,0.05);
+      border: 1px solid rgba(255, 255, 255, 0.05);
       border-radius: 50px;
       text-align: center;
       font-family: 'Orbitron', monospace;
@@ -189,152 +309,638 @@
       letter-spacing: 2px;
       margin-bottom: 15px;
       text-transform: uppercase;
-    }
-
-    .copy-btn {
-      background: transparent;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: #94a3b8;
-      display: none; 
-      opacity: 0;
-      transform: translateY(10px);
-    }
-
-    .copy-btn.show {
+      transition: all 0.3s;
+      min-height: 56px;
       display: flex;
-      animation: fadeInUp 0.4s ease forwards;
+      align-items: center;
+      justify-content: center;
+      word-break: break-all;
+      padding: 18px 20px;
     }
-
-    @keyframes fadeInUp {
-      to { opacity: 1; transform: translateY(0); }
+    .code-display.success {
+      border-color: var(--success);
+      color: var(--success);
+      box-shadow: 0 0 20px rgba(0, 255, 163, 0.2);
     }
-
-    .copy-btn:hover {
-      border-color: #ffffff;
-      color: #ffffff;
+    .code-display.error {
+      border-color: var(--error);
+      color: var(--error);
+      box-shadow: 0 0 20px rgba(255, 56, 96, 0.2);
     }
+    .code-display.loading { color: var(--warn); border-color: rgba(255, 176, 32, 0.4); }
 
+    /* ============ HISTORY ============ */
+    .history-panel {
+      margin-top: 8px;
+      display: none;
+      animation: fadeInUp 0.4s ease;
+    }
+    .history-panel.show { display: block; }
+    .history-title {
+      font-size: 10px;
+      color: var(--text-muted);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 130px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .history-list::-webkit-scrollbar { width: 4px; }
+    .history-list::-webkit-scrollbar-thumb { background: rgba(0, 240, 255, 0.3); border-radius: 99px; }
+    .history-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      background: rgba(0, 240, 255, 0.03);
+      border: 1px solid rgba(0, 240, 255, 0.1);
+      border-radius: 10px;
+      font-size: 11px;
+      font-family: 'Orbitron', monospace;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .history-item:hover {
+      border-color: var(--cyber-cyan);
+      color: var(--cyber-cyan);
+      transform: translateX(2px);
+    }
+    .history-item .hist-code { color: var(--cyber-cyan); font-weight: 600; }
+    .history-item .hist-time { font-size: 9px; opacity: 0.6; }
+
+    /* ============ FOOTER ============ */
     .card-footer {
       margin-top: 30px;
       font-size: 11px;
       color: rgba(148, 163, 184, 0.4);
       letter-spacing: 1px;
       text-transform: uppercase;
-      border-top: 1px dashed rgba(255,255,255,0.05);
+      border-top: 1px dashed rgba(255, 255, 255, 0.05);
       padding-top: 20px;
+    }
+
+    /* ============ VOICE FAB ============ */
+    .voice-fab {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      border: 1px solid var(--border-color);
+      background: linear-gradient(135deg, var(--cyber-blue), var(--cyber-purple));
+      color: white;
+      font-size: 22px;
+      cursor: pointer;
+      z-index: 100;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 8px 32px rgba(168, 85, 247, 0.5);
+      transition: transform 0.3s;
+    }
+    .voice-fab:hover { transform: scale(1.08) rotate(-5deg); }
+    .voice-fab.listening {
+      background: linear-gradient(135deg, var(--cyber-cyan), var(--cyber-blue));
+      animation: voicePulse 1.2s infinite;
+    }
+    @keyframes voicePulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0.7); }
+      50%     { box-shadow: 0 0 0 16px rgba(0, 240, 255, 0); }
+    }
+    .pulse-ring {
+      position: absolute; inset: 0;
+      border-radius: 50%;
+      border: 2px solid var(--cyber-cyan);
+      opacity: 0;
+      pointer-events: none;
+    }
+    .voice-fab.listening .pulse-ring { animation: ringExpand 1.5s infinite; }
+    @keyframes ringExpand {
+      0%   { opacity: 0.8; transform: scale(1); }
+      100% { opacity: 0;   transform: scale(1.9); }
+    }
+
+    /* ============ TOAST ============ */
+    .toast {
+      position: fixed;
+      top: 20px; left: 50%;
+      transform: translateX(-50%) translateY(-120%);
+      background: #0a0f1e;
+      border: 1px solid var(--cyber-cyan);
+      color: var(--text-main);
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      z-index: 200;
+      box-shadow: 0 8px 32px rgba(0, 240, 255, 0.3);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      max-width: 90%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    .toast i { color: var(--cyber-cyan); }
+    .toast.error { border-color: var(--error); }
+    .toast.error i { color: var(--error); }
+    .toast.success { border-color: var(--success); }
+    .toast.success i { color: var(--success); }
+
+    /* ============ KEYBOARD HINT ============ */
+    .kbd-hint {
+      margin-top: 12px;
+      font-size: 10px;
+      color: rgba(148, 163, 184, 0.4);
+      letter-spacing: 0.5px;
+    }
+    .kbd-hint kbd {
+      background: rgba(0, 240, 255, 0.1);
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-family: 'Orbitron', monospace;
+      font-size: 9px;
+      color: var(--cyber-cyan);
+    }
+
+    /* ============ RESPONSIVE ============ */
+    @media (max-width: 420px) {
+      .container { padding: 32px 22px; }
+      .title { font-size: 24px; }
+      .voice-fab { width: 54px; height: 54px; font-size: 20px; bottom: 16px; right: 16px; }
     }
   </style>
 </head>
 
 <body>
 
-<div class="container">
-  <div class="icon-container">
-    <img src="https://whatsapp.com/channel/0029VbAchaI59PwSijs6a81f" alt="pk-Xmd Icon">
+  <!-- Background orbs -->
+  <div class="bg-orbs">
+    <div class="orb a"></div>
+    <div class="orb b"></div>
+    <div class="orb c"></div>
   </div>
 
-  <h1 class="title">PK-XMD</h1>
-  
-  <div class="protocol-badge">
-    <i class="fas fa-shield-alt"></i> Pair Code Site
-  </div>
-  
-  <p class="description">
-    <i class="fas fa-sync-alt fa-spin" style="font-size: 11px; margin-right: 4px; color: var(--cyber-cyan);"></i> 
-    End-to-end encrypted handshake · Generate pairing code for WhatsApp Bot
-  </p>
-
-  <div class="form-group">
-    <label class="input-label">
-      <i class="fas fa-mobile-alt"></i> WHATSAPP NUMBER (WITHOUT '+' )
-    </label>
-    <input type="tel" inputmode="numeric" autocomplete="tel" id="mobileNumber" class="input-field" placeholder="254XXXXXXXXX">
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <i class="fas fa-check-circle"></i>
+    <span id="toastText">Notification</span>
   </div>
 
-  <button class="action-btn generate-btn" id="submit">
-    <i class="fas fa-fingerprint"></i> Generate Pair Code
+  <!-- Voice FAB -->
+  <button class="voice-fab" id="voiceFab" title="Voice assistant (say: generate, copy, help)">
+    <span class="pulse-ring"></span>
+    <i class="fas fa-microphone"></i>
   </button>
 
-  <div class="code-display" id="codeDisplay">Awaiting Pair Request</div>
+  <!-- Main Container -->
+  <div class="container">
+    <div class="icon-container">
+      <img src="https://whatsapp.com/channel/0029VbAchaI59PwSijs6a81f" alt="Nova-Xmd Icon">
+    </div>
 
-  <button class="action-btn copy-btn" id="copy">
-    <i class="far fa-copy"></i> Copy Code
-  </button>
+    <h1 class="title">NOVA-XMD</h1>
 
-  <div class="card-footer">
-    <i class="fas fa-microchip"></i> PK-XMD • Powered by officialpkdriller 
+    <div class="protocol-badge">
+      <i class="fas fa-shield-alt"></i> Pair Code Site
+    </div>
+
+    <p class="description">
+      <i class="fas fa-sync-alt fa-spin" style="font-size: 11px; margin-right: 4px;"></i>
+      End-to-end encrypted handshake · Generate pairing code for WhatsApp Bot
+    </p>
+
+    <div class="form-group">
+      <label class="input-label" for="mobileNumber">
+        <i class="fas fa-mobile-alt"></i> WHATSAPP NUMBER (WITHOUT '+')
+      </label>
+      <input type="tel" inputmode="numeric" autocomplete="tel"
+             id="mobileNumber" class="input-field"
+             placeholder="254XXXXXXXXX" maxlength="15" />
+    </div>
+
+    <button class="action-btn generate-btn" id="submit">
+      <div class="btn-shimmer"></div>
+      <i class="fas fa-fingerprint"></i> Generate Pair Code
+    </button>
+
+    <div class="code-display" id="codeDisplay">Awaiting Pair Request</div>
+
+    <button class="action-btn copy-btn" id="copy">
+      <i class="far fa-copy"></i> Copy Code
+    </button>
+
+    <!-- Secondary actions -->
+    <div class="btn-row">
+      <button class="btn-secondary" id="btnSpeak" title="Read status aloud">
+        <i class="fas fa-volume-up"></i> Speak
+      </button>
+      <button class="btn-secondary" id="btnPaste" title="Paste number from clipboard">
+        <i class="fas fa-paste"></i> Paste
+      </button>
+      <button class="btn-secondary" id="btnHistory" title="Show recent codes">
+        <i class="fas fa-history"></i> History
+      </button>
+    </div>
+
+    <!-- History panel -->
+    <div class="history-panel" id="historyPanel">
+      <div class="history-title">
+        <i class="fas fa-clock"></i> Recent Codes
+      </div>
+      <div class="history-list" id="historyList"></div>
+    </div>
+
+    <div class="kbd-hint">
+      Shortcuts: <kbd>G</kbd> generate · <kbd>C</kbd> copy · <kbd>V</kbd> voice
+    </div>
+
+    <div class="card-footer">
+      <i class="fas fa-microchip"></i> NOVA-XMD • Powered by officialpkdriller
+    </div>
   </div>
-</div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js"></script>
 
-<script>
-  let loadingInterval;
-
-  // Auto-fill phone number if saved previously in browser storage
-  window.addEventListener('DOMContentLoaded', () => {
-    const savedNumber = localStorage.getItem('nova_saved_number');
-    if (savedNumber) {
-      document.getElementById('mobileNumber').value = savedNumber;
-    }
-  });
-
-  function startLoadingAnimation() {
+  <script>
+    /* ==========================================================
+       ELEMENT REFERENCES
+       ========================================================== */
     const codeDisplay = document.getElementById('codeDisplay');
-    let dots = 0;
-    codeDisplay.textContent = 'Generating';
-    
-    loadingInterval = setInterval(() => {
-      dots = (dots + 1) % 4;
-      codeDisplay.textContent = 'Generating' + '.'.repeat(dots);
-    }, 400);
-  }
+    const copyBtn     = document.getElementById('copy');
+    const numInput    = document.getElementById('mobileNumber');
+    const submitBtn   = document.getElementById('submit');
+    const btnSpeak    = document.getElementById('btnSpeak');
+    const btnPaste    = document.getElementById('btnPaste');
+    const btnHistory  = document.getElementById('btnHistory');
+    const historyPanel= document.getElementById('historyPanel');
+    const historyList = document.getElementById('historyList');
+    const toast       = document.getElementById('toast');
+    const toastText   = document.getElementById('toastText');
+    const voiceFab    = document.getElementById('voiceFab');
 
-  function stopLoadingAnimation() {
-    clearInterval(loadingInterval);
-  }
+    let loadingInterval;
+    let currentCode = '';
+    let lastStatus = '';
 
-  document.getElementById('submit').addEventListener('click', async () => {
-    const codeDisplay = document.getElementById('codeDisplay');
-    const copyBtn = document.getElementById('copy');
-    const numInput = document.getElementById('mobileNumber');
-    const num = numInput.value.trim();
-    
-    if (!num) {
-      codeDisplay.textContent = 'Enter a valid number';
-      copyBtn.classList.remove('show');
-      return;
+    /* ==========================================================
+       VOICE ENGINE
+       ========================================================== */
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognition = null;
+    let listening = false;
+    let voiceEnabled = true;
+
+    function speak(text, opts = {}) {
+      if (!voiceEnabled || !('speechSynthesis' in window) || !text) return;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.rate = opts.rate || 1;
+      u.pitch = opts.pitch || 1.05;
+      u.volume = 1;
+      const voices = window.speechSynthesis.getVoices();
+      const v = voices.find(x => /Google|Samantha|Zira|Microsoft/i.test(x.name));
+      if (v) u.voice = v;
+      window.speechSynthesis.speak(u);
     }
 
-    // Save number inside local device history securely
-    localStorage.setItem('nova_saved_number', num);
+    function initRecognition() {
+      if (!SpeechRecognition) return null;
+      const r = new SpeechRecognition();
+      r.lang = 'en-US';
+      r.interimResults = false;
+      r.maxAlternatives = 1;
+      r.continuous = false;
+      r.onresult = (e) => handleVoiceCommand(e.results[0][0].transcript.toLowerCase());
+      r.onerror = (e) => {
+        if (e.error === 'not-allowed') speak('Microphone permission required.');
+        stopListening();
+      };
+      r.onend = () => stopListening();
+      return r;
+    }
 
-    copyBtn.classList.remove('show');
-    startLoadingAnimation();
-
-    try {
-      const res = await axios(`/code?number=${num.replace(/\D/g, '')}`);
-      stopLoadingAnimation();
-      
-      if (res.data && res.data.code) {
-        codeDisplay.textContent = res.data.code;
-        copyBtn.classList.add('show');
-      } else {
-        codeDisplay.textContent = 'Error generating key';
+    function startListening() {
+      if (!SpeechRecognition) {
+        showToast('Voice not supported in this browser', 'error');
+        speak('Voice recognition is not supported here.');
+        return;
       }
-    } catch {
-      stopLoadingAnimation();
-      codeDisplay.textContent = 'Failed';
+      recognition = recognition || initRecognition();
+      try {
+        recognition.start();
+        listening = true;
+        voiceFab.classList.add('listening');
+        showToast('Listening… say "generate", "copy", or "help"');
+        speak('Listening');
+      } catch (err) { console.warn(err); }
     }
-  });
 
-  document.getElementById('copy').addEventListener('click', () => {
-    const code = document.getElementById('codeDisplay').textContent.trim();
-    if (!code || code.includes('Awaiting') || code.includes('Generating')) return;
+    function stopListening() {
+      listening = false;
+      voiceFab.classList.remove('listening');
+    }
 
-    navigator.clipboard.writeText(code);
-  });
-</script>
+    voiceFab.addEventListener('click', () => {
+      if (listening) { recognition && recognition.stop(); speak('Voice stopped'); }
+      else startListening();
+    });
+
+    /* ==========================================================
+       VOICE COMMANDS
+       ========================================================== */
+    function handleVoiceCommand(text) {
+      console.log('Voice:', text);
+      if (/generate|pair|get code|new code/.test(text)) {
+        speak('Generating pairing code');
+        submitBtn.click();
+      } else if (/copy|clipboard/.test(text)) {
+        if (currentCode) { copyBtn.click(); speak('Code copied'); }
+        else speak('No code to copy yet');
+      } else if (/paste|enter number/.test(text)) {
+        btnPaste.click();
+      } else if (/history|previous|recent/.test(text)) {
+        btnHistory.click();
+      } else if (/help|guide|how/.test(text)) {
+        speakHelp();
+      } else if (/status|what.*status/.test(text)) {
+        speakStatus();
+      } else if (/read.*code|what.*code/.test(text)) {
+        if (currentCode) speak('Your code is ' + currentCode.split('').join(' '));
+        else speak('No code has been generated yet');
+      } else if (/mute|quiet|stop talking/.test(text)) {
+        voiceEnabled = false;
+        showToast('Voice muted');
+      } else if (/unmute|enable voice/.test(text)) {
+        voiceEnabled = true;
+        speak('Voice enabled');
+      } else {
+        speak('Try saying generate, copy, help, or status.');
+        showToast('Unknown command', 'error');
+      }
+    }
+
+    function speakHelp() {
+      speak(
+        'Enter your WhatsApp number without a plus sign. Tap generate pair code. ' +
+        'Then open WhatsApp, go to linked devices, link a device, and enter the code. ' +
+        'Say copy to copy the code, history to see previous codes, or status to hear the current state.'
+      );
+      showToast('Voice help reading…');
+    }
+
+    function speakStatus() {
+      const msg = lastStatus === 'success'
+        ? 'Pairing code is ready. Tap copy or say copy to copy it.'
+        : lastStatus === 'loading'
+        ? 'Generating pairing code. Please wait.'
+        : lastStatus === 'error'
+        ? 'There was an error. Please check your number and try again.'
+        : 'No pairing code yet. Enter your number and tap generate.';
+      speak(msg);
+      showToast(msg);
+    }
+
+    /* ==========================================================
+       TOAST
+       ========================================================== */
+    let toastTimer = null;
+    function showToast(text, type = 'info') {
+      toastText.textContent = text;
+      toast.className = 'toast show ' + type;
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 3200);
+    }
+
+    /* ==========================================================
+       LOADING ANIMATION
+       ========================================================== */
+    function startLoadingAnimation() {
+      lastStatus = 'loading';
+      codeDisplay.className = 'code-display loading';
+      let dots = 0;
+      codeDisplay.textContent = 'Generating';
+      loadingInterval = setInterval(() => {
+        dots = (dots + 1) % 4;
+        codeDisplay.textContent = 'Generating' + '.'.repeat(dots);
+      }, 400);
+    }
+
+    function stopLoadingAnimation() {
+      clearInterval(loadingInterval);
+    }
+
+    /* ==========================================================
+       GENERATE PAIR CODE
+       ========================================================== */
+    submitBtn.addEventListener('click', async () => {
+      const num = numInput.value.trim();
+
+      if (!num || num.replace(/\D/g, '').length < 10) {
+        lastStatus = 'error';
+        codeDisplay.className = 'code-display error';
+        codeDisplay.textContent = 'Enter a valid number';
+        copyBtn.classList.remove('show');
+        showToast('Enter a valid WhatsApp number', 'error');
+        speak('Please enter a valid phone number');
+        return;
+      }
+
+      // Save number securely
+      localStorage.setItem('nova_saved_number', num);
+
+      copyBtn.classList.remove('show');
+      copyBtn.classList.remove('copied');
+      currentCode = '';
+      submitBtn.disabled = true;
+      startLoadingAnimation();
+      speak('Generating pairing code, please wait');
+
+      try {
+        const res = await axios(`/code?number=${num.replace(/\D/g, '')}`);
+        stopLoadingAnimation();
+        submitBtn.disabled = false;
+
+        if (res.data && res.data.code) {
+          currentCode = res.data.code;
+          codeDisplay.className = 'code-display success';
+          codeDisplay.textContent = currentCode;
+          copyBtn.classList.add('show');
+          copyBtn.classList.remove('copied');
+          copyBtn.innerHTML = '<i class="far fa-copy"></i> Copy Code';
+          lastStatus = 'success';
+
+          saveToHistory(currentCode, num);
+          speak('Pairing code generated successfully');
+          showToast('Code generated! Copy and paste in WhatsApp.', 'success');
+        } else {
+          lastStatus = 'error';
+          codeDisplay.className = 'code-display error';
+          codeDisplay.textContent = 'Error generating code';
+          speak('Error generating code. Please try again.');
+          showToast('Error generating code', 'error');
+        }
+      } catch (err) {
+        stopLoadingAnimation();
+        submitBtn.disabled = false;
+        lastStatus = 'error';
+        codeDisplay.className = 'code-display error';
+        codeDisplay.textContent = 'Failed';
+        speak('Failed to generate code. Please try again.');
+        showToast('Failed to generate code', 'error');
+      }
+    });
+
+    /* ==========================================================
+       COPY CODE
+       ========================================================== */
+    copyBtn.addEventListener('click', async () => {
+      if (!currentCode) return;
+      try {
+        await navigator.clipboard.writeText(currentCode);
+        copyBtn.classList.add('copied');
+        copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+        showToast('Code copied to clipboard', 'success');
+        speak('Code copied');
+        setTimeout(() => {
+          copyBtn.classList.remove('copied');
+          copyBtn.innerHTML = '<i class="far fa-copy"></i> Copy Code';
+        }, 2000);
+      } catch {
+        showToast('Copy failed — copy manually', 'error');
+      }
+    });
+
+    /* ==========================================================
+       PASTE NUMBER
+       ========================================================== */
+    btnPaste.addEventListener('click', async () => {
+      try {
+        const txt = await navigator.clipboard.readText();
+        const digits = txt.replace(/\D/g, '');
+        if (digits.length >= 10) {
+          numInput.value = digits;
+          numInput.focus();
+          showToast('Number pasted', 'success');
+          speak('Number pasted');
+        } else {
+          showToast('Clipboard has no valid number', 'error');
+        }
+      } catch {
+        showToast('Clipboard access denied', 'error');
+      }
+    });
+
+    /* ==========================================================
+       HISTORY
+       ========================================================== */
+    function getHistory() {
+      try { return JSON.parse(localStorage.getItem('nova_history') || '[]'); }
+      catch { return []; }
+    }
+
+    function saveToHistory(code, number) {
+      const hist = getHistory();
+      hist.unshift({ code, number, time: Date.now() });
+      localStorage.setItem('nova_history', JSON.stringify(hist.slice(0, 20)));
+    }
+
+    function renderHistory() {
+      const hist = getHistory();
+      if (!hist.length) {
+        historyList.innerHTML = '<div style="color:var(--text-muted);font-size:11px;padding:8px;text-align:center;">No history yet</div>';
+        return;
+      }
+      historyList.innerHTML = hist.map(item => {
+        const ago = timeAgo(item.time);
+        return `<div class="history-item" data-code="${item.code}">
+          <span class="hist-code">${item.code}</span>
+          <span class="hist-time">${ago}</span>
+        </div>`;
+      }).join('');
+
+      historyList.querySelectorAll('.history-item').forEach(el => {
+        el.addEventListener('click', async () => {
+          const c = el.dataset.code;
+          currentCode = c;
+          codeDisplay.className = 'code-display success';
+          codeDisplay.textContent = c;
+          copyBtn.classList.add('show');
+          try {
+            await navigator.clipboard.writeText(c);
+            showToast('History code restored & copied', 'success');
+            speak('History code copied');
+          } catch {}
+        });
+      });
+    }
+
+    function timeAgo(ts) {
+      const s = Math.floor((Date.now() - ts) / 1000);
+      if (s < 60) return s + 's ago';
+      if (s < 3600) return Math.floor(s / 60) + 'm ago';
+      if (s < 86400) return Math.floor(s / 3600) + 'h ago';
+      return Math.floor(s / 86400) + 'd ago';
+    }
+
+    btnHistory.addEventListener('click', () => {
+      renderHistory();
+      historyPanel.classList.toggle('show');
+      if (historyPanel.classList.contains('show')) {
+        speak('Showing recent codes history');
+      }
+    });
+
+    /* ==========================================================
+       SPEAK STATUS
+       ========================================================== */
+    btnSpeak.addEventListener('click', speakStatus);
+
+    /* ==========================================================
+       KEYBOARD SHORTCUTS
+       ========================================================== */
+    document.addEventListener('keydown', (e) => {
+      const tag = (e.target.tagName || '').toLowerCase();
+      if (tag === 'input' || tag === 'textarea') return;
+      if (e.key === 'g' || e.key === 'G') submitBtn.click();
+      if ((e.key === 'c' || e.key === 'C') && currentCode) copyBtn.click();
+      if (e.key === 'v' || e.key === 'V') {
+        if (listening) recognition && recognition.stop();
+        else startListening();
+      }
+    });
+
+    /* ==========================================================
+       INPUT SANITIZATION
+       ========================================================== */
+    numInput.addEventListener('input', () => {
+      numInput.value = numInput.value.replace(/[^\d]/g, '');
+    });
+    numInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') submitBtn.click();
+    });
+
+    /* ==========================================================
+       BOOT
+       ========================================================== */
+    window.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('nova_saved_number');
+      if (saved) numInput.value = saved;
+
+      setTimeout(() => {
+        speak('Welcome to Nova X M D. Enter your WhatsApp number or tap the mic to use voice commands.');
+      }, 900);
+    });
+  </script>
 
 </body>
-  </html>
+</html>

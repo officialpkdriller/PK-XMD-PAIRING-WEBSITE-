@@ -2,29 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>NOVA-XMD | Modern WhatsApp Bot</title>
+    <meta name="description" content="NOVA-XMD — Next-gen WhatsApp bot with pair code, QR linking, and community feedback.">
+    <meta name="theme-color" content="#00ff66">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-dark: #050811;
             --card-bg: rgba(13, 20, 38, 0.55);
             --primary-neon: #00ff66;
             --primary-glow: rgba(0, 255, 102, 0.4);
+            --accent-cyan: #22d3ee;
+            --accent-orange: #ffaa00;
             --text-main: #f3f4f6;
             --text-muted: #9ca3af;
             --border-color: rgba(255, 255, 255, 0.08);
             --btn-heroku: #430098;
         }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
-
+        html { scroll-behavior: smooth; }
         body {
             background-color: var(--bg-dark);
             color: var(--text-main);
@@ -34,63 +38,56 @@
             justify-content: center;
             overflow-x: hidden;
             position: relative;
+            padding: 20px 12px;
         }
 
-        /* Ambient Background */
+        /* ============ AMBIENT BACKGROUND ============ */
         .bg-layer {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 10% 20%, rgba(0, 255, 102, 0.04) 0%, transparent 45%),
-                        radial-gradient(circle at 90% 80%, rgba(255, 170, 0, 0.03) 0%, transparent 45%);
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background:
+                radial-gradient(circle at 10% 20%, rgba(0, 255, 102, 0.04) 0%, transparent 45%),
+                radial-gradient(circle at 90% 80%, rgba(34, 211, 238, 0.04) 0%, transparent 45%);
             z-index: -2;
         }
-
         .pulse-wave {
             position: fixed;
-            top: 50%;
-            left: 50%;
+            top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 500px;
-            height: 500px;
+            width: 500px; height: 500px;
             background: radial-gradient(circle, rgba(0, 255, 102, 0.06) 0%, transparent 70%);
             animation: wavePulse 8s infinite alternate;
             z-index: -1;
             pointer-events: none;
         }
-
         @keyframes wavePulse {
-            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
-            100% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.8; }
+            0%   { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
+            100% { transform: translate(-50%, -50%) scale(1.15); opacity: 0.85; }
         }
-
         .spark-effect {
             position: absolute;
-            width: 3px;
-            height: 3px;
+            width: 3px; height: 3px;
             background-color: var(--primary-neon);
             border-radius: 50%;
             box-shadow: 0 0 8px var(--primary-neon);
-            animation: sparkMove 12s linear infinite;  
+            animation: sparkMove 12s linear infinite;
             pointer-events: none;
         }
-
         @keyframes sparkMove {
-            0% { transform: translateY(100vh) translateX(0) scale(0.5); opacity: 0; }
-            50% { opacity: 0.7; }
+            0%   { transform: translateY(100vh) translateX(0) scale(0.5); opacity: 0; }
+            50%  { opacity: 0.7; }
             100% { transform: translateY(-10vh) translateX(30px) scale(1); opacity: 0; }
         }
 
+        /* ============ WRAPPER ============ */
         .main-wrapper {
             width: 100%;
             max-width: 950px;
-            padding: 20px;
             z-index: 1;
         }
 
-        /* Compact Split Card Layout */
+        /* ============ CONTENT BOX ============ */
         .content-box {
             background: var(--card-bg);
             backdrop-filter: blur(16px);
@@ -103,13 +100,29 @@
             display: flex;
             gap: 30px;
             align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        /* Animated top glow */
+        .content-box::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary-neon), var(--accent-cyan), transparent);
+            background-size: 200% 100%;
+            animation: borderSlide 5s linear infinite;
+        }
+        @keyframes borderSlide {
+            0%   { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
         }
 
-        /* Left Column: Compact Image */
-        .left-panel {
-            flex: 0 0 380px;
-        }
+        .left-panel { flex: 0 0 380px; }
 
+        .feature-pic-wrap {
+            position: relative;
+            border-radius: 14px;
+            overflow: hidden;
+        }
         .feature-pic {
             width: 100%;
             height: 340px;
@@ -118,9 +131,24 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 8px 25px rgba(0,0,0,0.5);
             display: block;
+            transition: transform 0.6s;
+        }
+        .feature-pic-wrap:hover .feature-pic { transform: scale(1.04); }
+        /* Scan overlay on image */
+        .feature-pic-wrap::after {
+            content: '';
+            position: absolute; left: 0; right: 0; top: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary-neon), transparent);
+            box-shadow: 0 0 12px var(--primary-neon);
+            opacity: 0;
+            animation: scanBeam 3s ease-in-out infinite;
+            pointer-events: none;
+        }
+        @keyframes scanBeam {
+            0%,100% { top: 8%;  opacity: 0.8; }
+            50%     { top: 92%; opacity: 0.8; }
         }
 
-        /* Right Column: Text and Links */
         .right-panel {
             flex: 1;
             text-align: left;
@@ -129,41 +157,53 @@
             justify-content: center;
         }
 
-        /* Compact Glowing Neon Text */
+        /* ============ GLOWING TITLE ============ */
         .glowing-welcome-text {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.8rem;
-            font-weight: 700;
+            font-size: 1.85rem;
+            font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 1px;
+            line-height: 1.2;
             color: #ffffff;
-            margin-bottom: 25px;
-            text-shadow: 0 0 8px rgba(0, 255, 102, 0.3),
-                         0 0 15px rgba(0, 255, 102, 0.5),
-                         0 0 30px rgba(0, 255, 102, 0.7);
+            margin-bottom: 8px;
+            text-shadow:
+                0 0 8px rgba(0, 255, 102, 0.3),
+                0 0 15px rgba(0, 255, 102, 0.5),
+                0 0 30px rgba(0, 255, 102, 0.7);
             animation: textNeonPulse 2s ease-in-out infinite alternate;
         }
-
         @keyframes textNeonPulse {
-            from {
-                text-shadow: 0 0 8px rgba(0, 255, 102, 0.3), 0 0 15px rgba(0, 255, 102, 0.5);
-            }
-            to {
-                text-shadow: 0 0 12px rgba(0, 255, 102, 0.5), 0 0 25px rgba(0, 255, 102, 0.8), 0 0 35px rgba(0, 255, 102, 0.9);
-            }
+            from { text-shadow: 0 0 8px rgba(0, 255, 102, 0.3), 0 0 15px rgba(0, 255, 102, 0.5); }
+            to   { text-shadow: 0 0 12px rgba(0, 255, 102, 0.5), 0 0 25px rgba(0, 255, 102, 0.8), 0 0 35px rgba(0, 255, 102, 0.9); }
         }
+        /* Tagline */
+        .tagline {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 22px;
+        }
+        .tagline .dot {
+            display: inline-block;
+            width: 6px; height: 6px;
+            background: var(--primary-neon);
+            border-radius: 50%;
+            margin-right: 6px;
+            box-shadow: 0 0 8px var(--primary-neon);
+            animation: pulse 1.8s infinite;
+        }
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
 
-        /* Grid Buttons - Tightened padding & margins */
+        /* ============ BUTTON GROUP ============ */
         .btn-group {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
             width: 100%;
         }
-
-        .btn-group a:nth-child(5) {
-            grid-column: span 2;
-        }
+        .btn-group a:nth-child(5) { grid-column: span 2; }
 
         .custom-btn {
             padding: 12px 18px;
@@ -179,32 +219,60 @@
             transition: all 0.25s ease;
             border: 1px solid transparent;
             background: rgba(255,255,255,0.03);
+            position: relative;
+            overflow: hidden;
         }
+        .custom-btn::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: translateX(-100%);
+        }
+        .custom-btn:hover::before { animation: shimmer 1s ease; }
+        @keyframes shimmer { to { transform: translateX(100%); } }
+        .custom-btn:hover { transform: translateY(-2px); }
+        .custom-btn i { transition: transform 0.3s; }
+        .custom-btn:hover i { transform: scale(1.15) rotate(-5deg); }
 
-        .pair-btn { 
-            border-color: rgba(0, 255, 102, 0.25); 
+        .pair-btn {
+            border-color: rgba(0, 255, 102, 0.25);
             color: var(--primary-neon);
         }
-        .pair-btn:hover { 
-            background: var(--primary-neon); 
+        .pair-btn:hover {
+            background: var(--primary-neon);
             color: #000;
             box-shadow: 0 0 18px var(--primary-glow);
         }
-
         .contact-btn { border-color: rgba(37, 211, 102, 0.25); color: #25d366; }
         .contact-btn:hover { background: #25d366; color: #fff; box-shadow: 0 0 18px rgba(37, 211, 102, 0.3); }
-
         .github-btn { border-color: rgba(255,255,255,0.12); color: #fff; }
         .github-btn:hover { background: #fff; color: #000; }
-
         .heroku-btn { background: var(--btn-heroku); border-color: rgba(67, 0, 152, 0.3); color: #fff; }
         .heroku-btn:hover { background: #5200b8; box-shadow: 0 0 18px rgba(67, 0, 152, 0.4); }
 
-        .custom-btn:hover {
-            transform: translateY(-2px);
+        /* ============ QUICK STATS BAR ============ */
+        .quick-stats {
+            display: flex;
+            gap: 18px;
+            margin-top: 22px;
+            padding-top: 18px;
+            border-top: 1px dashed var(--border-color);
+            flex-wrap: wrap;
         }
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        .stat i {
+            color: var(--primary-neon);
+            font-size: 0.9rem;
+        }
+        .stat strong { color: var(--text-main); font-weight: 700; }
 
-        /* Compact Feedback Section */
+        /* ============ FEEDBACK AREA ============ */
         .feedback-area {
             background: var(--card-bg);
             backdrop-filter: blur(16px);
@@ -213,14 +281,50 @@
             border-radius: 20px;
             padding: 25px;
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
         }
+        .feedback-area::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-cyan), var(--primary-neon), transparent);
+            background-size: 200% 100%;
+            animation: borderSlide 5s linear infinite;
+        }
+
+        .feedback-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .feedback-header h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            color: var(--primary-neon);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .feedback-header h2 i { font-size: 0.9rem; }
+
+        .comment-counter {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            background: rgba(0, 255, 102, 0.06);
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 255, 102, 0.15);
+        }
+        .comment-counter strong { color: var(--primary-neon); }
 
         .input-field {
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
-
         .user-name, .user-comment {
             width: 100%;
             padding: 12px 15px;
@@ -230,18 +334,14 @@
             color: #fff;
             font-size: 0.9rem;
             transition: all 0.25s;
+            font-family: inherit;
         }
-
         .user-name:focus, .user-comment:focus {
             outline: none;
             border-color: var(--primary-neon);
-            box-shadow: 0 0 10px rgba(0, 255, 102, 0.08);
+            box-shadow: 0 0 12px rgba(0, 255, 102, 0.12);
         }
-
-        .user-comment {
-            height: 85px;
-            resize: none;
-        }
+        .user-comment { height: 85px; resize: none; }
 
         .post-comment {
             background: var(--primary-neon);
@@ -253,63 +353,82 @@
             font-weight: 700;
             font-size: 0.9rem;
             transition: all 0.25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: inherit;
         }
-
         .post-comment:hover {
             background: #00e65c;
             box-shadow: 0 5px 15px var(--primary-glow);
+            transform: translateY(-1px);
         }
+        .post-comment:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-        /* Comments Engine */
+        /* ============ COMMENTS ============ */
         .comment-list {
             margin-top: 20px;
-            max-height: 200px;
+            max-height: 260px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
             gap: 12px;
             padding-right: 5px;
         }
-
-        .comment-list::-webkit-scrollbar {
-            width: 4px;
-        }
+        .comment-list::-webkit-scrollbar { width: 4px; }
         .comment-list::-webkit-scrollbar-thumb {
-            background: rgba(255,255,255,0.08);
+            background: rgba(0, 255, 102, 0.25);
             border-radius: 10px;
         }
-
+        .comment-list::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.02);
+        }
         .user-comment-box {
             background: rgba(255, 255, 255, 0.01);
             padding: 15px;
             border-radius: 10px;
             border: 1px solid var(--border-color);
+            transition: 0.25s;
+            animation: fadeInUp 0.35s ease;
         }
-
+        .user-comment-box:hover {
+            border-color: rgba(0, 255, 102, 0.25);
+            transform: translateX(2px);
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
         .comment-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 6px;
+            gap: 10px;
         }
-
-        .user-comment-box .comment-author {
+        .comment-author {
             color: var(--primary-neon);
             font-weight: 600;
             font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
-
-        .user-comment-box .comment-time {
-            font-size: 0.75rem;
-            color: var(--text-muted);
+        .comment-author::before {
+            content: '';
+            width: 6px; height: 6px;
+            background: var(--primary-neon);
+            border-radius: 50%;
+            box-shadow: 0 0 6px var(--primary-neon);
         }
-
+        .comment-time { font-size: 0.7rem; color: var(--text-muted); }
         .user-comment-box p {
             color: var(--text-main);
             font-size: 0.85rem;
             line-height: 1.5;
+            word-wrap: break-word;
         }
-
         .remove-comment {
             background: rgba(239, 68, 68, 0.1);
             border: 1px solid rgba(239, 68, 68, 0.2);
@@ -317,40 +436,115 @@
             padding: 3px 8px;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
+            transition: 0.2s;
+            margin-top: 8px;
+        }
+        .remove-comment:hover {
+            background: rgba(239, 68, 68, 0.25);
         }
 
-        /* Footer */
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 24px 12px;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+        }
+        .empty-state i {
+            display: block;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            color: rgba(0, 255, 102, 0.3);
+        }
+
+        /* ============ FOOTER ============ */
         .footer-section {
             text-align: center;
             padding: 25px 0 5px;
             color: var(--text-muted);
             font-size: 0.8rem;
         }
+        .footer-section a { color: var(--primary-neon); text-decoration: none; }
+        .footer-section a:hover { text-decoration: underline; }
 
-        /* Responsive Breakpoint */
+        /* ============ VOICE FAB ============ */
+        .voice-fab {
+            position: fixed;
+            bottom: 22px; right: 22px;
+            width: 58px; height: 58px;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 255, 102, 0.35);
+            background: linear-gradient(135deg, #00ff66, #22d3ee);
+            color: #050811;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 100;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 8px 32px rgba(0, 255, 102, 0.5);
+            transition: transform 0.3s;
+        }
+        .voice-fab:hover { transform: scale(1.08) rotate(-5deg); }
+        .voice-fab.listening {
+            background: linear-gradient(135deg, #22d3ee, #00ff66);
+            animation: voicePulse 1.2s infinite;
+        }
+        @keyframes voicePulse {
+            0%,100% { box-shadow: 0 0 0 0 rgba(0, 255, 102, 0.7); }
+            50%     { box-shadow: 0 0 0 16px rgba(0, 255, 102, 0); }
+        }
+        .pulse-ring {
+            position: absolute; inset: 0;
+            border-radius: 50%;
+            border: 2px solid var(--primary-neon);
+            opacity: 0;
+            pointer-events: none;
+        }
+        .voice-fab.listening .pulse-ring { animation: ringExpand 1.5s infinite; }
+        @keyframes ringExpand {
+            0%   { opacity: 0.8; transform: scale(1); }
+            100% { opacity: 0;   transform: scale(1.9); }
+        }
+
+        /* ============ TOAST ============ */
+        .toast {
+            position: fixed;
+            top: 20px; left: 50%;
+            transform: translateX(-50%) translateY(-120%);
+            background: #0a1120;
+            border: 1px solid var(--primary-neon);
+            color: var(--text-main);
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            z-index: 200;
+            box-shadow: 0 8px 32px rgba(0, 255, 102, 0.3);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            max-width: 90%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+        .toast i { color: var(--primary-neon); }
+        .toast.error { border-color: #ef4444; }
+        .toast.error i { color: #ef4444; }
+
+        /* ============ RESPONSIVE ============ */
         @media (max-width: 820px) {
-            .content-box {
-                flex-direction: column;
-                gap: 20px;
-                padding: 20px;
-            }
-            .left-panel {
-                flex: none;
-                width: 100%;
-            }
-            .feature-pic {
-                height: 240px;
-            }
-            .right-panel {
-                text-align: center;
-            }
-            .btn-group {
-                grid-template-columns: 1fr;
-            }
-            .btn-group a:nth-child(5) {
-                grid-column: span 1;
-            }
+            .content-box { flex-direction: column; gap: 20px; padding: 20px; }
+            .left-panel { flex: none; width: 100%; }
+            .feature-pic { height: 240px; }
+            .right-panel { text-align: center; }
+            .btn-group { grid-template-columns: 1fr; }
+            .btn-group a:nth-child(5) { grid-column: span 1; }
+            .quick-stats { justify-content: center; }
+        }
+        @media (max-width: 420px) {
+            .glowing-welcome-text { font-size: 1.4rem; }
+            .voice-fab { width: 52px; height: 52px; font-size: 18px; bottom: 16px; right: 16px; }
+            .feedback-area { padding: 20px 15px; }
         }
     </style>
 </head>
@@ -358,16 +552,31 @@
     <div class="bg-layer"></div>
     <div class="pulse-wave"></div>
 
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastText">Notification</span>
+    </div>
+
+    <!-- Voice FAB -->
+    <button class="voice-fab" id="voiceFab" title="Voice assistant (say: pair, qr, feedback, help)">
+        <span class="pulse-ring"></span>
+        <i class="fas fa-microphone"></i>
+    </button>
+
     <div class="main-wrapper">
 
         <main class="content-box">
             <div class="left-panel">
-                <img src="https://url.bmbxmd.workers.dev/novaxmd.png" alt="NOVA-XMD Feature" class="feature-pic">
+                <div class="feature-pic-wrap">
+                    <img src="https://url.bmbxmd.workers.dev/novaxmd.png" alt="NOVA-XMD Feature" class="feature-pic">
+                </div>
             </div>
-            
+
             <div class="right-panel">
                 <h1 class="glowing-welcome-text">Welcome Nova Xmd Bot Link</h1>
-                
+                <p class="tagline"><span class="dot"></span> Next-Gen WhatsApp Bot · Fast · Secure</p>
+
                 <div class="btn-group">
                     <a href="/pair" class="custom-btn pair-btn">
                         <i class="fas fa-link"></i> Pair Code
@@ -385,91 +594,315 @@
                         <i class="fas fa-cloud-upload-alt"></i> Heroku Deploy
                     </a>
                 </div>
+
+                <div class="quick-stats">
+                    <div class="stat"><i class="fas fa-bolt"></i> <strong>99.9%</strong> uptime</div>
+                    <div class="stat"><i class="fas fa-lock"></i> Encrypted</div>
+                    <div class="stat"><i class="fas fa-rocket"></i> Fast deploy</div>
+                </div>
             </div>
         </main>
 
         <section class="feedback-area">
-            <div class="input-field">
-                <input type="text" class="user-name" placeholder="Your Name" required>
-                <textarea class="user-comment" placeholder="Leave your feedback or suggestions here..." required></textarea>
-                <button class="post-comment">Submit Feedback</button>
+            <div class="feedback-header">
+                <h2><i class="fas fa-comments"></i> Community Feedback</h2>
+                <div class="comment-counter">
+                    <strong id="commentCount">0</strong> comments
+                </div>
             </div>
+
+            <div class="input-field">
+                <input type="text" class="user-name" id="userName" placeholder="Your Name" maxlength="40" required>
+                <textarea class="user-comment" id="userComment" placeholder="Leave your feedback or suggestions here..." maxlength="500" required></textarea>
+                <button class="post-comment" id="postComment">
+                    <i class="fas fa-paper-plane"></i> Submit Feedback
+                </button>
+            </div>
+
             <div class="comment-list" id="comment-list"></div>
         </section>
 
         <footer class="footer-section">
-            <p>&copy; NOVA-XMD 2026. All Rights Reserved.</p>
+            <p>&copy; NOVA-XMD 2026. All Rights Reserved. · Powered by <a href="https://github.com/novaxmd" target="_blank">NOVA-XMD</a></p>
         </footer>
     </div>
 
     <script>
+        /* ==========================================================
+           ELEMENTS
+           ========================================================== */
+        const toast         = document.getElementById('toast');
+        const toastText     = document.getElementById('toastText');
+        const voiceFab      = document.getElementById('voiceFab');
+        const userName      = document.getElementById('userName');
+        const userComment   = document.getElementById('userComment');
+        const postBtn       = document.getElementById('postComment');
+        const commentList   = document.getElementById('comment-list');
+        const commentCount  = document.getElementById('commentCount');
+
+        const HISTORY_KEY = 'userFeedback';
+        const ADMIN_NAME  = 'Admin';
+
+        /* ==========================================================
+           TOAST
+           ========================================================== */
+        let toastTimer = null;
+        function showToast(text, type = '') {
+            toastText.textContent = text;
+            toast.className = 'toast show ' + type;
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toast.classList.remove('show'), 3200);
+        }
+
+        /* ==========================================================
+           VOICE ENGINE
+           ========================================================== */
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition = null;
+        let listening   = false;
+        let voiceEnabled = true;
+
+        function speak(text, opts = {}) {
+            if (!voiceEnabled || !('speechSynthesis' in window) || !text) return;
+            window.speechSynthesis.cancel();
+            const u = new SpeechSynthesisUtterance(text);
+            u.rate   = opts.rate   || 1;
+            u.pitch  = opts.pitch  || 1.05;
+            u.volume = 1;
+            const voices = window.speechSynthesis.getVoices();
+            const v = voices.find(x => /Google|Samantha|Zira|Microsoft/i.test(x.name));
+            if (v) u.voice = v;
+            window.speechSynthesis.speak(u);
+        }
+
+        function initRecognition() {
+            if (!SpeechRecognition) return null;
+            const r = new SpeechRecognition();
+            r.lang = 'en-US';
+            r.interimResults = false;
+            r.maxAlternatives = 1;
+            r.continuous = false;
+            r.onresult = (e) => handleVoiceCommand(e.results[0][0].transcript.toLowerCase());
+            r.onerror  = (e) => {
+                if (e.error === 'not-allowed') speak('Microphone permission required.');
+                stopListening();
+            };
+            r.onend = () => stopListening();
+            return r;
+        }
+
+        function startListening() {
+            if (!SpeechRecognition) {
+                showToast('Voice not supported in this browser', 'error');
+                speak('Voice recognition is not supported here.');
+                return;
+            }
+            recognition = recognition || initRecognition();
+            try {
+                recognition.start();
+                listening = true;
+                voiceFab.classList.add('listening');
+                showToast('Listening… say "pair", "qr", "feedback", or "help"');
+                speak('Listening');
+            } catch (err) { console.warn(err); }
+        }
+
+        function stopListening() {
+            listening = false;
+            voiceFab.classList.remove('listening');
+        }
+
+        voiceFab.addEventListener('click', () => {
+            if (listening) { recognition && recognition.stop(); speak('Voice stopped'); }
+            else startListening();
+        });
+
+        /* ==========================================================
+           VOICE COMMANDS
+           ========================================================== */
+        function handleVoiceCommand(text) {
+            console.log('Voice:', text);
+
+            if (/pair|pair code|link device/.test(text)) {
+                speak('Opening pair code page');
+                window.location.href = '/pair';
+            } else if (/^qr|qr code|scan/.test(text)) {
+                speak('Opening QR code page');
+                window.location.href = '/qr';
+            } else if (/owner|contact|support|reach/.test(text)) {
+                speak('Opening owner contact');
+                window.open('https://wa.me/255767862457', '_blank');
+            } else if (/github|repo|source/.test(text)) {
+                speak('Opening GitHub repository');
+                window.open('https://github.com/novaxmd', '_blank');
+            } else if (/heroku|deploy/.test(text)) {
+                speak('Opening Heroku deploy page');
+                window.open('https://dashboard.heroku.com/new?template=https://github.com/novaxnd/NOVA-XMD', '_blank');
+            } else if (/feedback|comment/.test(text)) {
+                userComment.focus();
+                userComment.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                speak('Feedback form ready. Type your name and comment.');
+            } else if (/read.*comments|what.*comments/.test(text)) {
+                const count = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]').length;
+                speak(count ? `There are ${count} comments.` : 'No comments yet.');
+            } else if (/help|guide/.test(text)) {
+                speakHelp();
+            } else if (/mute|quiet/.test(text)) {
+                voiceEnabled = false;
+                showToast('Voice muted');
+            } else if (/unmute|enable voice/.test(text)) {
+                voiceEnabled = true;
+                speak('Voice enabled');
+            } else {
+                speak('Try saying pair, qr, owner, github, feedback, or help.');
+                showToast('Unknown command', 'error');
+            }
+        }
+
+        function speakHelp() {
+            speak(
+                'You can say: Pair, to open pair code. Q R, to open QR code. ' +
+                'Owner, to chat on WhatsApp. GitHub, to open the repo. ' +
+                'Feedback, to focus the feedback form. ' +
+                'Or say mute to silence me.'
+            );
+            showToast('Voice help reading…');
+        }
+
+        /* ==========================================================
+           BACKGROUND SPARKS
+           ========================================================== */
         function addSparks(count) {
             const bgLayer = document.querySelector('.bg-layer');
             for (let i = 0; i < count; i++) {
                 const spark = document.createElement('div');
                 spark.className = 'spark-effect';
                 spark.style.left = Math.random() * 100 + 'vw';
-                spark.style.top = Math.random() * 100 + 'vh';
-                spark.style.animationDuration = Math.random() * 6 + 6 + 's';
-                spark.style.animationDelay = Math.random() * 4 + 's';
+                spark.style.top  = Math.random() * 100 + 'vh';
+                spark.style.animationDuration = (Math.random() * 6 + 6) + 's';
+                spark.style.animationDelay    = (Math.random() * 4) + 's';
                 bgLayer.appendChild(spark);
             }
         }
-        addSparks(12);
+        addSparks(14);
+
+        /* ==========================================================
+           FEEDBACK SYSTEM
+           ========================================================== */
+        function getFeedback() {
+            try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); }
+            catch { return []; }
+        }
+
+        function setFeedback(list) {
+            localStorage.setItem(HISTORY_KEY, JSON.stringify(list));
+        }
+
+        function escapeHTML(s) {
+            return String(s)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
 
         function showComments() {
-            const savedComments = JSON.parse(localStorage.getItem('userFeedback')) || [];
-            const commentArea = document.getElementById('comment-list');
-            commentArea.innerHTML = '';
-            
-            savedComments.forEach(feedback => {
-                const newFeedback = document.createElement('div');
-                newFeedback.className = 'user-comment-box';
-                newFeedback.innerHTML = `
+            const items = getFeedback();
+            commentCount.innerHTML = '<strong>' + items.length + '</strong>';
+            commentList.innerHTML = '';
+
+            if (!items.length) {
+                commentList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-comment-dots"></i>
+                        No feedback yet. Be the first to leave one!
+                    </div>`;
+                return;
+            }
+
+            items.forEach(feedback => {
+                const box = document.createElement('div');
+                box.className = 'user-comment-box';
+                box.innerHTML = `
                     <div class="comment-header">
-                        <div class="comment-author">${feedback.name}</div>
-                        <div class="comment-time">${feedback.time}</div>
+                        <div class="comment-author">${escapeHTML(feedback.name)}</div>
+                        <div class="comment-time">${escapeHTML(feedback.time)}</div>
                     </div>
-                    <p>${feedback.text}</p>
-                    <div style="margin-top: 8px; text-align: right;">
-                        <button class="remove-comment" style="display:none;">Delete</button>
-                    </div>
+                    <p>${escapeHTML(feedback.text)}</p>
+                    ${feedback.name === ADMIN_NAME
+                        ? '<button class="remove-comment"><i class="fas fa-trash"></i> Delete</button>'
+                        : ''}
                 `;
-                commentArea.appendChild(newFeedback);
+                commentList.appendChild(box);
 
-                const removeBtn = newFeedback.querySelector('.remove-comment');
-                if (feedback.name === 'Admin') {
-                    removeBtn.style.display = 'inline-block';
+                const removeBtn = box.querySelector('.remove-comment');
+                if (removeBtn) {
+                    removeBtn.addEventListener('click', () => {
+                        const updated = getFeedback().filter(f => f.time !== feedback.time);
+                        setFeedback(updated);
+                        showComments();
+                        showToast('Comment deleted');
+                    });
                 }
-
-                removeBtn.addEventListener('click', function() {
-                    const updatedFeedback = savedComments.filter(f => f.time !== feedback.time);
-                    localStorage.setItem('userFeedback', JSON.stringify(updatedFeedback));
-                    showComments();
-                });
             });
         }
 
-        document.querySelector('.post-comment').addEventListener('click', function() {
-            const nameInput = document.querySelector('.user-name');
-            const commentInput = document.querySelector('.user-comment');
-            
-            if (nameInput.value.trim() && commentInput.value.trim()) {
-                const newFeedback = {
-                    name: nameInput.value.trim(),
-                    text: commentInput.value.trim(),
-                    time: new Date().toLocaleDateString('en-US', {hour: '2-digit', minute:'2-digit'})
-                };
-                let feedbackList = JSON.parse(localStorage.getItem('userFeedback')) || [];
-                feedbackList.push(newFeedback);
-                localStorage.setItem('userFeedback', JSON.stringify(feedbackList));
-                showComments();
-                nameInput.value = '';
-                commentInput.value = '';
+        postBtn.addEventListener('click', () => {
+            const name = userName.value.trim();
+            const text = userComment.value.trim();
+
+            if (!name || !text) {
+                showToast('Please fill both name and comment', 'error');
+                speak('Please fill both name and comment');
+                return;
+            }
+
+            const newFeedback = {
+                name,
+                text,
+                time: new Date().toLocaleString('en-US', {
+                    month: 'short', day: 'numeric',
+                    hour: '2-digit', minute: '2-digit'
+                })
+            };
+
+            const list = getFeedback();
+            list.push(newFeedback);
+            setFeedback(list);
+            showComments();
+
+            userName.value = '';
+            userComment.value = '';
+            showToast('Feedback posted — thank you!');
+            speak('Thank you for your feedback');
+        });
+
+        /* ==========================================================
+           KEYBOARD SHORTCUT
+           ========================================================== */
+        document.addEventListener('keydown', (e) => {
+            const tag = (e.target.tagName || '').toLowerCase();
+            if (tag === 'input' || tag === 'textarea') return;
+            if (e.key === 'v' || e.key === 'V') {
+                if (listening) recognition && recognition.stop();
+                else startListening();
+            }
+            if (e.key === 'f' || e.key === 'F') {
+                userComment.focus();
+                userComment.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         });
 
-        window.onload = showComments;
+        /* ==========================================================
+           BOOT
+           ========================================================== */
+        window.addEventListener('DOMContentLoaded', () => {
+            showComments();
+            setTimeout(() => {
+                speak('Welcome to Nova X M D. Say pair, qr, or feedback to get started.');
+            }, 900);
+        });
     </script>
 </body>
 </html>
