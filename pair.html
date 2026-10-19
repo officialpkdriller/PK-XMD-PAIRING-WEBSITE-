@@ -756,7 +756,7 @@
       }
 
       // Save number securely
-      localStorage.setItem('nova_saved_number', num);
+      localStorage.setItem('pkxmd_saved_number', num);
 
       copyBtn.classList.remove('show');
       copyBtn.classList.remove('copied');
@@ -844,14 +844,14 @@
        HISTORY
        ========================================================== */
     function getHistory() {
-      try { return JSON.parse(localStorage.getItem('nova_history') || '[]'); }
+      try { return JSON.parse(localStorage.getItem('pkxmd_history') || '[]'); }
       catch { return []; }
     }
 
     function saveToHistory(code, number) {
       const hist = getHistory();
       hist.unshift({ code, number, time: Date.now() });
-      localStorage.setItem('nova_history', JSON.stringify(hist.slice(0, 20)));
+      localStorage.setItem('pkxmd_history', JSON.stringify(hist.slice(0, 20)));
     }
 
     function renderHistory() {
@@ -933,11 +933,11 @@
        BOOT
        ========================================================== */
     window.addEventListener('DOMContentLoaded', () => {
-      const saved = localStorage.getItem('nova_saved_number');
+      const saved = localStorage.getItem('pkxmd_saved_number');
       if (saved) numInput.value = saved;
 
       setTimeout(() => {
-        speak('Welcome to Nova X M D. Enter your WhatsApp number or tap the mic to use voice commands.');
+        speak('Welcome to PK-XMD PAIR WEB. Enter your WhatsApp number or tap the mic to use voice commands.');
       }, 900);
     });
   </script>
