@@ -1,0 +1,22 @@
+{
+    "name": "pkxmd Pairing",
+    "description": "pkxmd pairing code, Created by pk tech",
+    "logo": ".https://url.bmbxmd.workers.dev/ZNAII.jpg",
+    "repository": ".https://github.com/officialpkdriller/PK-XMD-PAIRING-WEBSITE-/tree/main",
+    "keywords": ["pk"],
+    "success_url": "/", 
+    "buildpacks": [{ "url": "https://github.com/heroku/heroku-buildpack-nodejs#latest" } ],
+    "env": {      
+      "PORT": {
+        "description": "Port for web app.4000,5000,3000... any!",
+        "value": "5000",
+        "required": false 
+      },
+      "MESSAGE": {
+        "description": "set session id conformation message",
+        "value": "",
+        "required": false 
+      }
+    }   
+
+}

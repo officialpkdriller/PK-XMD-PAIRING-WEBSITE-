@@ -1,0 +1,25 @@
+{
+  "description": "pk Tech Session Id",
+  "main": "./pkxmd.js",
+  "engines": {
+    "npm": ">=9.7.2",
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "start": "node pkxm.js"
+  },
+  "author": "officialpkdriller",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "@whiskeysockets/baileys": "npm:bmbsession-baileys@latest",
+    "qrcode": "^1.5.4",
+    "awesome-phonenumber": "^7.8.0",
+    "pino": "^10.1.0",
+    "phone": "3.1.30",
+    "jimp": "^1.6.0",
+    "lodash": "^4.17.21",
+    "body-parser": "^2.2.2",
+    "express": "^5.1.0",
+    "pastebin-js": "latest"
+  }
+}

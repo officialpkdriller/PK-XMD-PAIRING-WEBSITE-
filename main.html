@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOVA-XMD | Modern WhatsApp Bot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #050811;
+            --card-bg: rgba(13, 20, 38, 0.55);
+            --primary-neon: #00ff66;
+            --primary-glow: rgba(0, 255, 102, 0.4);
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --btn-heroku: #430098;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Ambient Background */
+        .bg-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 10% 20%, rgba(0, 255, 102, 0.04) 0%, transparent 45%),
+                        radial-gradient(circle at 90% 80%, rgba(255, 170, 0, 0.03) 0%, transparent 45%);
+            z-index: -2;
+        }
+
+        .pulse-wave {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0, 255, 102, 0.06) 0%, transparent 70%);
+            animation: wavePulse 8s infinite alternate;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        @keyframes wavePulse {
+            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
+            100% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.8; }
+        }
+
+        .spark-effect {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background-color: var(--primary-neon);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--primary-neon);
+            animation: sparkMove 12s linear infinite;  
+            pointer-events: none;
+        }
+
+        @keyframes sparkMove {
+            0% { transform: translateY(100vh) translateX(0) scale(0.5); opacity: 0; }
+            50% { opacity: 0.7; }
+            100% { transform: translateY(-10vh) translateX(30px) scale(1); opacity: 0; }
+        }
+
+        .main-wrapper {
+            width: 100%;
+            max-width: 950px;
+            padding: 20px;
+            z-index: 1;
+        }
+
+        /* Compact Split Card Layout */
+        .content-box {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            margin-bottom: 25px;
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        /* Left Column: Compact Image */
+        .left-panel {
+            flex: 0 0 380px;
+        }
+
+        .feature-pic {
+            width: 100%;
+            height: 340px;
+            object-fit: cover;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+            display: block;
+        }
+
+        /* Right Column: Text and Links */
+        .right-panel {
+            flex: 1;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Compact Glowing Neon Text */
+        .glowing-welcome-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #ffffff;
+            margin-bottom: 25px;
+            text-shadow: 0 0 8px rgba(0, 255, 102, 0.3),
+                         0 0 15px rgba(0, 255, 102, 0.5),
+                         0 0 30px rgba(0, 255, 102, 0.7);
+            animation: textNeonPulse 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes textNeonPulse {
+            from {
+                text-shadow: 0 0 8px rgba(0, 255, 102, 0.3), 0 0 15px rgba(0, 255, 102, 0.5);
+            }
+            to {
+                text-shadow: 0 0 12px rgba(0, 255, 102, 0.5), 0 0 25px rgba(0, 255, 102, 0.8), 0 0 35px rgba(0, 255, 102, 0.9);
+            }
+        }
+
+        /* Grid Buttons - Tightened padding & margins */
+        .btn-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            width: 100%;
+        }
+
+        .btn-group a:nth-child(5) {
+            grid-column: span 2;
+        }
+
+        .custom-btn {
+            padding: 12px 18px;
+            border-radius: 10px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.25s ease;
+            border: 1px solid transparent;
+            background: rgba(255,255,255,0.03);
+        }
+
+        .pair-btn { 
+            border-color: rgba(0, 255, 102, 0.25); 
+            color: var(--primary-neon);
+        }
+        .pair-btn:hover { 
+            background: var(--primary-neon); 
+            color: #000;
+            box-shadow: 0 0 18px var(--primary-glow);
+        }
+
+        .contact-btn { border-color: rgba(37, 211, 102, 0.25); color: #25d366; }
+        .contact-btn:hover { background: #25d366; color: #fff; box-shadow: 0 0 18px rgba(37, 211, 102, 0.3); }
+
+        .github-btn { border-color: rgba(255,255,255,0.12); color: #fff; }
+        .github-btn:hover { background: #fff; color: #000; }
+
+        .heroku-btn { background: var(--btn-heroku); border-color: rgba(67, 0, 152, 0.3); color: #fff; }
+        .heroku-btn:hover { background: #5200b8; box-shadow: 0 0 18px rgba(67, 0, 152, 0.4); }
+
+        .custom-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Compact Feedback Section */
+        .feedback-area {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .input-field {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .user-name, .user-comment {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 0.9rem;
+            transition: all 0.25s;
+        }
+
+        .user-name:focus, .user-comment:focus {
+            outline: none;
+            border-color: var(--primary-neon);
+            box-shadow: 0 0 10px rgba(0, 255, 102, 0.08);
+        }
+
+        .user-comment {
+            height: 85px;
+            resize: none;
+        }
+
+        .post-comment {
+            background: var(--primary-neon);
+            color: #050811;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: all 0.25s;
+        }
+
+        .post-comment:hover {
+            background: #00e65c;
+            box-shadow: 0 5px 15px var(--primary-glow);
+        }
+
+        /* Comments Engine */
+        .comment-list {
+            margin-top: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-right: 5px;
+        }
+
+        .comment-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .comment-list::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.08);
+            border-radius: 10px;
+        }
+
+        .user-comment-box {
+            background: rgba(255, 255, 255, 0.01);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .user-comment-box .comment-author {
+            color: var(--primary-neon);
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .user-comment-box .comment-time {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .user-comment-box p {
+            color: var(--text-main);
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .remove-comment {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            padding: 3px 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+
+        /* Footer */
+        .footer-section {
+            text-align: center;
+            padding: 25px 0 5px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        /* Responsive Breakpoint */
+        @media (max-width: 820px) {
+            .content-box {
+                flex-direction: column;
+                gap: 20px;
+                padding: 20px;
+            }
+            .left-panel {
+                flex: none;
+                width: 100%;
+            }
+            .feature-pic {
+                height: 240px;
+            }
+            .right-panel {
+                text-align: center;
+            }
+            .btn-group {
+                grid-template-columns: 1fr;
+            }
+            .btn-group a:nth-child(5) {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-layer"></div>
+    <div class="pulse-wave"></div>
+
+    <div class="main-wrapper">
+
+        <main class="content-box">
+            <div class="left-panel">
+                <img src="https://url.bmbxmd.workers.dev/novaxmd.png" alt="NOVA-XMD Feature" class="feature-pic">
+            </div>
+            
+            <div class="right-panel">
+                <h1 class="glowing-welcome-text">Welcome Nova Xmd Bot Link</h1>
+                
+                <div class="btn-group">
+                    <a href="/pair" class="custom-btn pair-btn">
+                        <i class="fas fa-link"></i> Pair Code
+                    </a>
+                    <a href="/qr" class="custom-btn pair-btn">
+                        <i class="fas fa-qrcode"></i> QR Code
+                    </a>
+                    <a href="https://wa.me/255767862457" target="_blank" class="custom-btn contact-btn">
+                        <i class="fab fa-whatsapp"></i> Reach Owner
+                    </a>
+                    <a href="https://github.com/novaxmd" target="_blank" class="custom-btn github-btn">
+                        <i class="fab fa-github"></i> GitHub Repo
+                    </a>
+                    <a href="https://dashboard.heroku.com/new?template=https://github.com/novaxnd/NOVA-XMD" target="_blank" class="custom-btn heroku-btn">
+                        <i class="fas fa-cloud-upload-alt"></i> Heroku Deploy
+                    </a>
+                </div>
+            </div>
+        </main>
+
+        <section class="feedback-area">
+            <div class="input-field">
+                <input type="text" class="user-name" placeholder="Your Name" required>
+                <textarea class="user-comment" placeholder="Leave your feedback or suggestions here..." required></textarea>
+                <button class="post-comment">Submit Feedback</button>
+            </div>
+            <div class="comment-list" id="comment-list"></div>
+        </section>
+
+        <footer class="footer-section">
+            <p>&copy; NOVA-XMD 2026. All Rights Reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        function addSparks(count) {
+            const bgLayer = document.querySelector('.bg-layer');
+            for (let i = 0; i < count; i++) {
+                const spark = document.createElement('div');
+                spark.className = 'spark-effect';
+                spark.style.left = Math.random() * 100 + 'vw';
+                spark.style.top = Math.random() * 100 + 'vh';
+                spark.style.animationDuration = Math.random() * 6 + 6 + 's';
+                spark.style.animationDelay = Math.random() * 4 + 's';
+                bgLayer.appendChild(spark);
+            }
+        }
+        addSparks(12);
+
+        function showComments() {
+            const savedComments = JSON.parse(localStorage.getItem('userFeedback')) || [];
+            const commentArea = document.getElementById('comment-list');
+            commentArea.innerHTML = '';
+            
+            savedComments.forEach(feedback => {
+                const newFeedback = document.createElement('div');
+                newFeedback.className = 'user-comment-box';
+                newFeedback.innerHTML = `
+                    <div class="comment-header">
+                        <div class="comment-author">${feedback.name}</div>
+                        <div class="comment-time">${feedback.time}</div>
+                    </div>
+                    <p>${feedback.text}</p>
+                    <div style="margin-top: 8px; text-align: right;">
+                        <button class="remove-comment" style="display:none;">Delete</button>
+                    </div>
+                `;
+                commentArea.appendChild(newFeedback);
+
+                const removeBtn = newFeedback.querySelector('.remove-comment');
+                if (feedback.name === 'Admin') {
+                    removeBtn.style.display = 'inline-block';
+                }
+
+                removeBtn.addEventListener('click', function() {
+                    const updatedFeedback = savedComments.filter(f => f.time !== feedback.time);
+                    localStorage.setItem('userFeedback', JSON.stringify(updatedFeedback));
+                    showComments();
+                });
+            });
+        }
+
+        document.querySelector('.post-comment').addEventListener('click', function() {
+            const nameInput = document.querySelector('.user-name');
+            const commentInput = document.querySelector('.user-comment');
+            
+            if (nameInput.value.trim() && commentInput.value.trim()) {
+                const newFeedback = {
+                    name: nameInput.value.trim(),
+                    text: commentInput.value.trim(),
+                    time: new Date().toLocaleDateString('en-US', {hour: '2-digit', minute:'2-digit'})
+                };
+                let feedbackList = JSON.parse(localStorage.getItem('userFeedback')) || [];
+                feedbackList.push(newFeedback);
+                localStorage.setItem('userFeedback', JSON.stringify(feedbackList));
+                showComments();
+                nameInput.value = '';
+                commentInput.value = '';
+            }
+        });
+
+        window.onload = showComments;
+    </script>
+</body>
+</html>

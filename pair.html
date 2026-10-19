@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nova-Xmd | LINK DEVICE</title>
+  <meta name="description" content="Secure WhatsApp pairing powered by officialpkdriller">
+
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Exo+2:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    :root {
+      --cyber-cyan: #00f0ff;
+      --cyber-blue: #0066ff;
+      --dark-bg: #030712;
+      --card-bg: rgba(6, 11, 25, 0.75);
+      --border-color: rgba(0, 240, 255, 0.25);
+      --input-bg: #040914;
+      --text-main: #e2e8f0;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background-color: var(--dark-bg);
+      background-image: 
+        linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      background-position: center;
+      color: var(--text-main);
+      font-family: 'Exo 2', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 460px;
+      padding: 40px 30px;
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 40px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(0, 240, 255, 0.05);
+      text-align: center;
+    }
+
+    .icon-container {
+      width: 85px;
+      height: 85px;
+      margin: 0 auto 20px;
+      background: #021224;
+      border: 2px solid var(--cyber-cyan);
+      border-radius: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+      overflow: hidden;
+    }
+
+    .icon-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #ffffff;
+      margin-bottom: 12px;
+    }
+
+    .protocol-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 240, 255, 0.08);
+      border: 1px solid var(--cyber-cyan);
+      padding: 5px 16px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: var(--cyber-cyan);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .description {
+      font-size: 13px;
+      color: #94a3b8;
+      line-height: 1.6;
+      margin-bottom: 30px;
+      max-width: 90%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .form-group {
+      text-align: left;
+      margin-bottom: 20px;
+    }
+
+    .input-label {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 11px;
+      color: var(--cyber-cyan);
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .input-label i {
+      margin-right: 6px;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 16px 20px;
+      background: var(--input-bg);
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      border-radius: 50px;
+      color: #ffffff;
+      font-size: 15px;
+      font-family: 'Orbitron', sans-serif;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+    }
+
+    .input-field:focus {
+      outline: none;
+      border-color: var(--cyber-cyan);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
+    }
+
+    .input-field::placeholder {
+      color: rgba(0, 240, 255, 0.25);
+    }
+
+    .action-btn {
+      width: 100%;
+      padding: 15px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'Orbitron', sans-serif;
+      letter-spacing: 1.5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      margin-bottom: 15px;
+    }
+
+    .generate-btn {
+      background: transparent;
+      border: 1px solid var(--cyber-cyan);
+      color: var(--cyber-cyan);
+    }
+
+    .generate-btn:hover {
+      background: rgba(0, 240, 255, 0.1);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+    }
+
+    .code-display {
+      width: 100%;
+      padding: 18px;
+      background: #020612;
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 50px;
+      text-align: center;
+      font-family: 'Orbitron', monospace;
+      font-size: 14px;
+      color: var(--cyber-cyan);
+      letter-spacing: 2px;
+      margin-bottom: 15px;
+      text-transform: uppercase;
+    }
+
+    .copy-btn {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #94a3b8;
+      display: none; 
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    .copy-btn.show {
+      display: flex;
+      animation: fadeInUp 0.4s ease forwards;
+    }
+
+    @keyframes fadeInUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .copy-btn:hover {
+      border-color: #ffffff;
+      color: #ffffff;
+    }
+
+    .card-footer {
+      margin-top: 30px;
+      font-size: 11px;
+      color: rgba(148, 163, 184, 0.4);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border-top: 1px dashed rgba(255,255,255,0.05);
+      padding-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+  <div class="icon-container">
+    <img src="https://whatsapp.com/channel/0029VbAchaI59PwSijs6a81f" alt="pk-Xmd Icon">
+  </div>
+
+  <h1 class="title">PK-XMD</h1>
+  
+  <div class="protocol-badge">
+    <i class="fas fa-shield-alt"></i> Pair Code Site
+  </div>
+  
+  <p class="description">
+    <i class="fas fa-sync-alt fa-spin" style="font-size: 11px; margin-right: 4px; color: var(--cyber-cyan);"></i> 
+    End-to-end encrypted handshake · Generate pairing code for WhatsApp Bot
+  </p>
+
+  <div class="form-group">
+    <label class="input-label">
+      <i class="fas fa-mobile-alt"></i> WHATSAPP NUMBER (WITHOUT '+' )
+    </label>
+    <input type="tel" inputmode="numeric" autocomplete="tel" id="mobileNumber" class="input-field" placeholder="254XXXXXXXXX">
+  </div>
+
+  <button class="action-btn generate-btn" id="submit">
+    <i class="fas fa-fingerprint"></i> Generate Pair Code
+  </button>
+
+  <div class="code-display" id="codeDisplay">Awaiting Pair Request</div>
+
+  <button class="action-btn copy-btn" id="copy">
+    <i class="far fa-copy"></i> Copy Code
+  </button>
+
+  <div class="card-footer">
+    <i class="fas fa-microchip"></i> PK-XMD • Powered by officialpkdriller 
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js"></script>
+
+<script>
+  let loadingInterval;
+
+  // Auto-fill phone number if saved previously in browser storage
+  window.addEventListener('DOMContentLoaded', () => {
+    const savedNumber = localStorage.getItem('nova_saved_number');
+    if (savedNumber) {
+      document.getElementById('mobileNumber').value = savedNumber;
+    }
+  });
+
+  function startLoadingAnimation() {
+    const codeDisplay = document.getElementById('codeDisplay');
+    let dots = 0;
+    codeDisplay.textContent = 'Generating';
+    
+    loadingInterval = setInterval(() => {
+      dots = (dots + 1) % 4;
+      codeDisplay.textContent = 'Generating' + '.'.repeat(dots);
+    }, 400);
+  }
+
+  function stopLoadingAnimation() {
+    clearInterval(loadingInterval);
+  }
+
+  document.getElementById('submit').addEventListener('click', async () => {
+    const codeDisplay = document.getElementById('codeDisplay');
+    const copyBtn = document.getElementById('copy');
+    const numInput = document.getElementById('mobileNumber');
+    const num = numInput.value.trim();
+    
+    if (!num) {
+      codeDisplay.textContent = 'Enter a valid number';
+      copyBtn.classList.remove('show');
+      return;
+    }
+
+    // Save number inside local device history securely
+    localStorage.setItem('nova_saved_number', num);
+
+    copyBtn.classList.remove('show');
+    startLoadingAnimation();
+
+    try {
+      const res = await axios(`/code?number=${num.replace(/\D/g, '')}`);
+      stopLoadingAnimation();
+      
+      if (res.data && res.data.code) {
+        codeDisplay.textContent = res.data.code;
+        copyBtn.classList.add('show');
+      } else {
+        codeDisplay.textContent = 'Error generating key';
+      }
+    } catch {
+      stopLoadingAnimation();
+      codeDisplay.textContent = 'Failed';
+    }
+  });
+
+  document.getElementById('copy').addEventListener('click', () => {
+    const code = document.getElementById('codeDisplay').textContent.trim();
+    if (!code || code.includes('Awaiting') || code.includes('Generating')) return;
+
+    navigator.clipboard.writeText(code);
+  });
+</script>
+
+</body>
+  </html>

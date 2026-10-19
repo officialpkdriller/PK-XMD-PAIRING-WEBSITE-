@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Bmb QR Code</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-dim: rgba(99,102,241,0.15);
+      --accent: #a855f7;
+      --success: #10b981;
+      --error: #ef4444;
+      --bg: #050810;
+      --surface: #0d1117;
+      --surface2: #161b27;
+      --border: rgba(99,102,241,0.2);
+      --border-dim: rgba(255,255,255,0.06);
+      --text: #e2e8f0;
+      --text-muted: #64748b;
+      --glow: rgba(99,102,241,0.35);
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    html { scroll-behavior:smooth; }
+    body {
+      background:var(--bg);
+      color:var(--text);
+      font-family:'Inter', sans-serif;
+      min-height:100vh;
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      overflow-x:hidden;
+      padding:20px 16px 40px;
+    }
+    body::before {
+      content:'';
+      position:fixed; inset:0;
+      background-image:
+        linear-gradient(rgba(99,102,241,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99,102,241,0.04) 1px, transparent 1px);
+      background-size:40px 40px;
+      z-index:0; pointer-events:none;
+    }
+    body::after {
+      content:'';
+      position:fixed;
+      top:-200px; left:50%;
+      transform:translateX(-50%);
+      width:700px; height:500px;
+      background:radial-gradient(ellipse, rgba(99,102,241,0.12) 0%, transparent 70%);
+      z-index:0; pointer-events:none;
+    }
+    .wrapper {
+      position:relative; z-index:1;
+      width:100%; max-width:420px;
+      display:flex; flex-direction:column; gap:16px;
+      animation:fadeUp 0.6s cubic-bezier(0.16,1,0.3,1) both;
+    }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);} }
+    .header-badge {
+      display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:4px;
+    }
+    .badge-dot {
+      width:8px; height:8px;
+      background:var(--success); border-radius:50%;
+      box-shadow:0 0 8px var(--success);
+      animation:pulse 2s ease-in-out infinite;
+    }
+    .badge-dot.loading { background:var(--primary); box-shadow:0 0 8px var(--primary); }
+    .badge-dot.error { background:var(--error); box-shadow:0 0 8px var(--error); animation:none; }
+    @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.5;}}
+    .badge-text { font-size:11px; font-weight:700; color:var(--success); letter-spacing:2px; text-transform:uppercase; }
+    .badge-text.loading { color:var(--primary); }
+    .badge-text.error { color:var(--error); }
+    .card {
+      background:var(--surface);
+      border:1px solid var(--border-dim);
+      border-radius:24px;
+      padding:32px 28px;
+      position:relative; overflow:hidden;
+    }
+    .card::before {
+      content:'';
+      position:absolute; top:0; left:0; right:0; height:1px;
+      background:linear-gradient(90deg, transparent, var(--primary), var(--accent), transparent);
+      opacity:0.6;
+    }
+    .brand {
+      display:flex; flex-direction:column; align-items:center;
+      text-align:center; margin-bottom:24px;
+    }
+    .logo-ring { position:relative; width:72px; height:72px; margin-bottom:18px; }
+    .logo-ring svg { position:absolute; inset:0; animation:spin 8s linear infinite; }
+    @keyframes spin { to{transform:rotate(360deg);} }
+    .logo-image {
+      position:absolute;
+      inset:10px;
+      width: calc(100% - 20px);
+      height: calc(100% - 20px);
+      border-radius:14px;
+      object-fit:cover;
+      display:block;
+      box-shadow:0 0 24px var(--glow);
+      border:1px solid rgba(255,255,255,0.04);
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+    }
+    .brand h1 {
+      font-size:22px; font-weight:900; letter-spacing:-0.5px;
+      background:linear-gradient(135deg, #fff 30%, var(--accent));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    }
+    .brand p { font-size:12px; color:var(--text-muted); margin-top:5px; letter-spacing:1px; text-transform:uppercase; }
+    .divider { height:1px; background:var(--border-dim); margin-bottom:24px; }
+    .qr-area {
+      display:flex; flex-direction:column; align-items:center; gap:20px;
+    }
+    .qr-frame {
+      width:240px; height:240px;
+      border-radius:18px;
+      border:1px solid var(--border);
+      background:var(--surface2);
+      display:flex; align-items:center; justify-content:center;
+      position:relative; overflow:hidden;
+      box-shadow:0 0 32px rgba(99,102,241,0.12);
+    }
+    .qr-frame::before {
+      content:'';
+      position:absolute; inset:-1px;
+      border-radius:18px;
+      padding:1px;
+      background:linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite:xor;
+      mask-composite:exclude;
+      opacity:0.5;
+    }
+    .qr-frame img {
+      width:100%; height:100%;
+      object-fit:contain;
+      border-radius:16px;
+      display:none;
+    }
+    .qr-spinner {
+      display:flex; flex-direction:column; align-items:center; gap:14px;
+    }
+    .spinner-ring {
+      width:48px; height:48px;
+      border:3px solid var(--border-dim);
+      border-top-color:var(--primary);
+      border-radius:50%;
+      animation:rotate 0.9s linear infinite;
+    }
+    @keyframes rotate { to{transform:rotate(360deg);} }
+    .spinner-text { font-size:12px; color:var(--text-muted); font-weight:500; letter-spacing:0.5px; }
+    .status-row {
+      display:flex; align-items:center; gap:8px;
+      font-size:13px; font-weight:600; color:var(--text-muted);
+    }
+    .status-icon { font-size:16px; }
+    .timer-bar {
+      width:100%;
+      height:3px;
+      background:var(--surface2);
+      border-radius:99px;
+      overflow:hidden;
+      display:none;
+    }
+    .timer-fill {
+      height:100%;
+      width:100%;
+      background:linear-gradient(90deg, var(--primary), var(--accent));
+      border-radius:99px;
+      transform-origin:left;
+      transition:transform 1s linear;
+    }
+    .timer-label {
+      font-size:11px; color:var(--text-muted);
+      text-align:center; letter-spacing:0.5px; display:none;
+    }
+    .btn-action {
+      width:100%; height:50px;
+      background:linear-gradient(135deg, var(--primary), var(--accent));
+      border:none; border-radius:14px;
+      color:white; font-size:14px; font-weight:700;
+      font-family:'Inter', sans-serif; letter-spacing:1px; text-transform:uppercase;
+      cursor:pointer; position:relative; overflow:hidden;
+      transition:transform 0.2s, box-shadow 0.2s;
+      box-shadow:0 4px 20px var(--glow);
+      display:none;
+    }
+    .btn-action:hover { transform:translateY(-2px); box-shadow:0 8px 28px var(--glow); }
+    .btn-action:active { transform:translateY(0); }
+    .btn-shimmer {
+      position:absolute; inset:0;
+      background:linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%);
+      transform:translateX(-100%);
+    }
+    .btn-action:hover .btn-shimmer { animation:shimmer 1.2s ease forwards; }
+    @keyframes shimmer { to{transform:translateX(100%);} }
+    .btn-back {
+      background:none; border:none; color:var(--text-muted);
+      font-size:12px; cursor:pointer; font-family:'Inter', sans-serif;
+      display:flex; align-items:center; justify-content:center; gap:6px;
+      padding:8px; margin:0 auto; transition:color 0.2s;
+    }
+    .btn-back:hover { color:var(--text); }
+    .steps {
+      display:flex; flex-direction:column; gap:10px;
+      margin-top:4px; display:none;
+    }
+    .step {
+      display:flex; align-items:center; gap:12px;
+      font-size:12px; color:var(--text-muted);
+    }
+    .step-num {
+      width:22px; height:22px; min-width:22px;
+      background:var(--primary-dim); border:1px solid var(--border);
+      border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:10px; font-weight:700; color:var(--primary);
+    }
+    .footer-note {
+      text-align:center; font-size:11px; color:var(--text-muted);
+      padding:0 8px; line-height:1.6;
+    }
+    .footer-note a { color:var(--primary); text-decoration:none; }
+    .footer-note a:hover { text-decoration:underline; }
+    @media (max-width:380px) {
+      .card { padding:24px 16px; }
+      .qr-frame { width:200px; height:200px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="header-badge">
+      <div class="badge-dot loading" id="statusDot"></div>
+      <span class="badge-text loading" id="statusBadge">Generating QR</span>
+    </div>
+    <div class="card">
+      <div class="brand">
+        <div class="logo-ring">
+          <svg viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="36" cy="36" r="33" stroke="url(#gr1)" stroke-width="1.5" stroke-dasharray="6 4"/>
+            <defs>
+              <linearGradient id="gr1" x1="0" y1="0" x2="72" y2="72" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#6366f1"/>
+                <stop offset="1" stop-color="#a855f7"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <img src="https://url.bmbxmd.workers.dev/ZNAII.jpg" alt="pk-Tech Logo" class="logo-image" />
+        </div>
+        <h1>QR Connect</h1>
+        <p>Scan to link your WhatsApp</p>
+      </div>
+      <div class="divider"></div>
+      <div class="qr-area">
+        <div class="qr-frame" id="qrFrame">
+          <div class="qr-spinner" id="qrSpinner">
+            <div class="spinner-ring"></div>
+            <span class="spinner-text">Connecting to WhatsApp...</span>
+          </div>
+          <img id="qrImg" alt="QR Code">
+        </div>
+        <div class="status-row" id="statusRow">
+          <i class="fas fa-circle-notch fa-spin status-icon" id="statusIcon"></i>
+          <span id="statusText">Generating your QR code&hellip;</span>
+        </div>
+        <div class="timer-bar" id="timerBar"><div class="timer-fill" id="timerFill"></div></div>
+        <span class="timer-label" id="timerLabel"></span>
+        <div class="steps" id="steps">
+          <div class="step"><div class="step-num">1</div><span>Open WhatsApp on your phone</span></div>
+          <div class="step"><div class="step-num">2</div><span>Go to <strong>Linked Devices</strong> &rarr; <strong>Link a Device</strong></span></div>
+          <div class="step"><div class="step-num">3</div><span>Scan the QR code above</span></div>
+        </div>
+        <button class="btn-action" id="btnRefresh" onclick="loadQr()">
+          <div class="btn-shimmer"></div>
+          <i class="fas fa-redo" style="margin-right:8px"></i> Get New QR
+        </button>
+        <button class="btn-back" onclick="window.location.href='/'">
+          <i class="fas fa-arrow-left"></i> Back
+        </button>
+      </div>
+    </div>
+    <p class="footer-note">
+      Powered by <a href="https://github.com/officialpkdiller/PK-XMD" target="_blank">Bmb-Tech</a> &middot;
+      <a href="https://wa.me/254799056874" target="_blank">Support</a>
+    </p>
+  </div>
+
+  <script>
+    const dot = document.getElementById('statusDot');
+    const badge = document.getElementById('statusBadge');
+    const spinner = document.getElementById('qrSpinner');
+    const img = document.getElementById('qrImg');
+    const statusIcon = document.getElementById('statusIcon');
+    const statusText = document.getElementById('statusText');
+    const timerBar = document.getElementById('timerBar');
+    const timerFill = document.getElementById('timerFill');
+    const timerLabel = document.getElementById('timerLabel');
+    const btnRefresh = document.getElementById('btnRefresh');
+    const steps = document.getElementById('steps');
+    let timerInterval = null;
+    let autoRefreshTimeout = null;
+
+    function setStatus(state, text) {
+      dot.className = 'badge-dot ' + state;
+      badge.className = 'badge-text ' + state;
+      badge.textContent = state === 'loading' ? 'Generating QR' : state === '' ? 'Scan Now' : state === 'error' ? 'Error' : text;
+      statusText.textContent = text;
+      statusIcon.className = 'fas status-icon ' + (state === 'loading' ? 'fa-circle-notch fa-spin' : state === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle');
+    }
+
+    function startTimer(seconds) {
+      timerBar.style.display = 'block';
+      timerLabel.style.display = 'block';
+      timerFill.style.transform = 'scaleX(1)';
+      let remaining = seconds;
+      timerLabel.textContent = 'QR expires in ' + remaining + 's';
+      timerInterval = setInterval(function() {
+        remaining--;
+        timerFill.style.transform = 'scaleX(' + (remaining / seconds) + ')';
+        timerLabel.textContent = 'QR expires in ' + remaining + 's';
+        if (remaining <= 0) {
+          clearInterval(timerInterval);
+          timerLabel.textContent = 'QR expired';
+        }
+      }, 1000);
+      autoRefreshTimeout = setTimeout(function() {
+        loadQr();
+      }, seconds * 1000);
+    }
+
+    function resetTimer() {
+      if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+      if (autoRefreshTimeout) { clearTimeout(autoRefreshTimeout); autoRefreshTimeout = null; }
+      timerBar.style.display = 'none';
+      timerLabel.style.display = 'none';
+    }
+
+    async function loadQr() {
+      resetTimer();
+      btnRefresh.style.display = 'none';
+      steps.style.display = 'none';
+      spinner.style.display = 'flex';
+      img.style.display = 'none';
+      img.src = '';
+      setStatus('loading', 'Generating your QR code…');
+      badge.textContent = 'Generating QR';
+      dot.className = 'badge-dot loading';
+
+      try {
+        const resp = await fetch('/qr/code?t=' + Date.now(), { cache: 'no-store' });
+        if (!resp.ok) throw new Error('Server error ' + resp.status);
+        const ct = resp.headers.get('content-type') || '';
+        if (ct.includes('image/png')) {
+          const blob = await resp.blob();
+          const url = URL.createObjectURL(blob);
+          img.onload = function() {
+            spinner.style.display = 'none';
+            img.style.display = 'block';
+            setStatus('', 'QR ready — scan with WhatsApp now');
+            badge.className = 'badge-text';
+            badge.textContent = 'Scan Now';
+            dot.className = 'badge-dot';
+            steps.style.display = 'flex';
+            startTimer(55);
+          };
+          img.src = url;
+        } else {
+          const data = await resp.json().catch(function() { return {}; });
+          throw new Error(data.error || 'Unexpected response');
+        }
+      } catch (e) {
+        spinner.style.display = 'none';
+        setStatus('error', e.message || 'Failed to generate QR. Please retry.');
+        badge.className = 'badge-text error';
+        badge.textContent = 'Error';
+        dot.className = 'badge-dot error';
+        btnRefresh.style.display = 'block';
+      }
+    }
+
+    loadQr();
+  </script>
+</body>
+</html>
