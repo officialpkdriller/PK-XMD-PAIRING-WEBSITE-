@@ -136,7 +136,7 @@ router.get('/', async (req, res) => {
                   console.log(`⚠️ Session file too small: ${data?.length || 0} bytes`);
                 }
               } else {
-                console.log(`⚠️ Session file not found yet, attempt \( {attempts + 1}/ \){maxAttempts}`);
+                console.log(`⚠️ Session file not found yet, attempt ${attempts + 1}/${maxAttempts}`);
               }
               await delay(3000);
               attempts++;
@@ -154,7 +154,7 @@ router.get('/', async (req, res) => {
             return;
           }
 
-          const base64 = Buffer.from(sessionData).toString('base64');
+          const base64 = "pk~" + Buffer.from(sessionData).toString('base64');
 
           try {
             console.log('📤 Sending session data to user...');
@@ -184,7 +184,7 @@ router.get('/', async (req, res) => {
 
 🔗 Repo: https://github.com/officialpkdriller/PK-XMD
 📢 whatsapp channel ☣️: https://whatsapp.com/channel/0029VbAchaI59PwSijs6a81f
-🌐 Dev: .https://contact-pk-three.vercel.app/
+🌐 Dev: https://contact-pk-three.vercel.app/
 
 Powered by PK-XMD Inc 🚀`
             }, { quoted: sentSession });
